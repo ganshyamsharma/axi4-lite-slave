@@ -10,7 +10,7 @@ module axi4_lite_slave(
 // Write Address Channel
     input i_awvalid,
     input [31:0] i_awaddr,
-    input [2:0] i_awprot,    
+    input [2:0] i_awprot,           // Not used   
     output reg o_awready,
 // Write Data Channel
     input i_wvalid,
@@ -24,7 +24,7 @@ module axi4_lite_slave(
 // Read Address Channel
     input i_arvalid,
     input [31:0] i_araddr,
-    input [2:0] i_arprot,
+    input [2:0] i_arprot,           // Not used
     output reg o_arready,
 // Read Data Channel
     input i_rready,
