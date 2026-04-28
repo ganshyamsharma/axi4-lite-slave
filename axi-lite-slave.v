@@ -10,7 +10,7 @@ module axi4_lite_slave(
 // Write Address Channel
     input i_awvalid,
     input [31:0] i_awaddr,
-    input [2:0] i_awprot,       //Tie to 3'b000 in axi lite
+    input [2:0] i_awprot,    
     output reg o_awready,
 // Write Data Channel
     input i_wvalid,
