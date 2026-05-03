@@ -1,4 +1,9 @@
-`timescale 1us/1ns
+/*          AXI4 - Lite Slave Interface Test-Bench
+                    Ganshyam
+                      v1.0
+*/
+
+`timescale 1ns/1ns
 
 module tb_axi4_lite_slave();
 
