@@ -1,3 +1,2 @@
 # axi4-lite-slave
-Synthesizable verilog code for a fully compliant axi4-lite slave module
-#  Under Progress
+The naming scheme follows standard AXI4 specification. 
