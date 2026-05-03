@@ -124,15 +124,15 @@ module tb_axi4_lite_slave();
         tb_wvalid  = 0; tb_wdata  = 0; tb_wstrb  = 0; tb_bready = 0;
         tb_arvalid = 0; tb_araddr = 0; tb_arprot = 0; tb_rready = 0;
 
-        #20;
+        #20
         tb_aresetn = 1;
-        #20;
+        #20
 
         $display("---------------------------------------------------");
         $display("Test 1: Standard 32-bit Access");
 
         axi_write(32'h0000_0004, 32'hDEADBEEF, 4'b1111);
-        #10;
+        #10
 
         axi_read(32'h0000_0004);
 
@@ -140,9 +140,9 @@ module tb_axi4_lite_slave();
         $display("Test 2: Byte-Lane Strobing");
 
         axi_write(32'h0000_0008, 32'h11223344, 4'b1111);
-        #10;
+        #10
         axi_write(32'h0000_0008, 32'h00FF0000, 4'b0100); 
-        #10;
+        #10
 
         axi_read(32'h0000_0008);
 
@@ -150,12 +150,12 @@ module tb_axi4_lite_slave();
         $display("Test 3: Out-of-Bounds Error Handling");
 
         axi_write(32'h0000_0400, 32'hBAD0BAD0, 4'b1111);
-        #10;
+        #10
         axi_read(32'h0000_0400);
         
         $display("---------------------------------------------------");
         $display("Simulation Complete");
-        #50;
+        #50
         $finish;
     end
 

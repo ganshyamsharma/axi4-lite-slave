@@ -20,8 +20,8 @@ module axi4_lite_slave(
     input   [3:0]   i_wstrb,
     output reg      o_wready,
 // Write Response Channel
-    input           i_bready,
-    output reg      o_bvalid,
+    input            i_bready,
+    output reg       o_bvalid,
     output reg [1:0] o_bresp,
 // Read Address Channel
     input           i_arvalid,
@@ -29,21 +29,21 @@ module axi4_lite_slave(
     input   [2:0]   i_arprot,           // Not used
     output reg      o_arready,
 // Read Data Channel
-    input           i_rready,
-    output reg      o_rvalid,
-    output reg [31:0]  o_rdata,
-    output reg [1:0]   o_rresp
+    input             i_rready,
+    output reg        o_rvalid,
+    output reg [31:0] o_rdata,
+    output reg [1:0]  o_rresp
 );
 // Read FSM Start
-    reg     [1:0]   r_current_state;
-    reg     [1:0]   r_next_state;
-    reg     [31:0]  r_rd_addr;
-    reg     [31:0]  r_mem [255:0];
-    reg             r_rdaddr_error;
+    reg [1:0]   r_current_state;
+    reg [1:0]   r_next_state;
+    reg [31:0]  r_rd_addr;
+    reg [31:0]  r_mem [255:0];
+    reg         r_rdaddr_error;
 
-    localparam      S_IDLE      = 0;
-    localparam      S_ADDR_ACK  = 1;
-    localparam      S_FETCH     = 2;
+    localparam  S_IDLE      = 0;
+    localparam  S_ADDR_ACK  = 1;
+    localparam  S_FETCH     = 2;
 
     always @(*) begin
         r_next_state = r_current_state;
@@ -101,16 +101,16 @@ module axi4_lite_slave(
     end
 
 //Write FSM Start
-reg     [2:0]   r_w_current_state;
-reg     [2:0]   r_w_next_state;
-reg     [31:0]  r_w_addr;
-reg             r_waddr_error;
+reg [2:0]   r_w_current_state;
+reg [2:0]   r_w_next_state;
+reg [31:0]  r_w_addr;
+reg         r_waddr_error;
 
-localparam S_W_IDLE         = 0;
-localparam S_AW_ADDR_ACK    = 1;
-localparam S_WVALID_WAIT    = 2;
-localparam S_WDATA_WRITE    = 3;
-localparam S_BRESP_ACK      = 4;
+localparam S_W_IDLE      = 0;
+localparam S_AW_ADDR_ACK = 1;
+localparam S_WVALID_WAIT = 2;
+localparam S_WDATA_WRITE = 3;
+localparam S_BRESP_ACK   = 4;
 
 always @(*) begin
     r_w_next_state = r_w_current_state;
@@ -128,12 +128,12 @@ end
 always @(posedge i_aclk) begin
 
     if(!i_aresetn) begin
-        r_w_current_state   <= S_W_IDLE;
-        o_awready           <= 0;
-        o_bvalid            <= 0;
-        o_wready            <= 0;
-        o_bresp             <= 0;
-        r_waddr_error       <= 0;
+        r_w_current_state <= S_W_IDLE;
+        o_awready         <= 0;
+        o_bvalid          <= 0;
+        o_wready          <= 0;
+        o_bresp           <= 0;
+        r_waddr_error     <= 0;
     end
     else begin
         r_w_current_state <= r_w_next_state;
@@ -144,13 +144,13 @@ always @(posedge i_aclk) begin
             end
             S_AW_ADDR_ACK: begin
                 o_awready <= 1;
-                r_w_addr <= i_awaddr;
+                r_w_addr  <= i_awaddr;
                 if (i_awaddr[31:10] != 22'b0) r_waddr_error <= 1'b1;
                 else r_waddr_error <= 1'b0;
             end
             S_WVALID_WAIT: begin
-                o_awready   <= 0;
-                o_wready    <= 1;
+                o_awready <= 0;
+                o_wready  <= 1;
             end
             S_WDATA_WRITE: begin
                 o_wready <= 0;
@@ -162,13 +162,13 @@ always @(posedge i_aclk) begin
                 end
             end
             S_BRESP_ACK: begin
-                o_bvalid    <= 1;
-                o_bresp     <= r_waddr_error ? 2'b10 : 2'b00;
+                o_bvalid <= 1;
+                o_bresp  <= r_waddr_error ? 2'b10 : 2'b00;
             end
             default: begin
-                o_bvalid    <= 0;
-                o_awready   <= 0;
-                o_wready    <= 0;
+                o_bvalid   <= 0;
+                o_awready  <= 0;
+                o_wready   <= 0;
             end
         endcase
     end
