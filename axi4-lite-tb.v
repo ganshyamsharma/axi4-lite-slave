@@ -96,6 +96,52 @@ module tb_axi4_lite_slave();
         end
     endtask
 
+    task axi_write_data_first;
+        input [31:0] wr_addr;
+        input [31:0] wr_data;
+        input [3:0]  wr_strobe;
+        begin
+            @(posedge tb_aclk);
+            tb_wvalid = 1'b1;
+            tb_wdata  = wr_data;
+
+            repeat(3) @(posedge tb_aclk);
+            tb_awvalid = 1'b1;
+            tb_awaddr  = wr_addr;
+
+            wait(tb_awvalid && tb_awready);
+            @(posedge tb_aclk);
+            tb_awvalid = 1'b0;
+
+            wait(tb_wvalid && tb_wready)
+            @(posedge tb_clk)
+        end
+    endtask
+
+    task axi_read_with_delay;
+        input [31:0] addr;
+        input integer delay_cycles;
+        begin
+            @(posedge tb_aclk);
+            tb_arvalid = 1;
+            tb_araddr = addr;
+
+            wait(tb_arvalid && tb_arready);
+            @(posedge tb_aclk);
+            tb_arvalid = 0;
+
+            repeat(delay_cycles) @(posedge tb_aclk);
+            tb_rready = 1;
+
+            wait(tb_rvalid && tb_rready);
+            @(posedge tb_aclk);
+            tb_rready = 0;
+
+            $display("[%0t] READ | Addr: 0x%0h | Data: 0x%0h | Resp: %b",
+                    $time, addr, tb_rdata, tb_rresp);
+        end
+    endtask
+    
     // Data Read Task
     task axi_read;
         input [31:0] read_address;
