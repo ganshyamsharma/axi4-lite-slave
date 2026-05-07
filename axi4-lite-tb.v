@@ -65,6 +65,10 @@ module tb_axi4_lite_slave();
         forever #5 tb_aclk = ~tb_aclk;
     end
 
+    always @(posedge tb_aclk) begin
+
+    end
+
     // Data Write Task
     task axi_write;
         input [31:0] write_address;
@@ -119,7 +123,7 @@ module tb_axi4_lite_slave();
                 end
                 begin
                     wait(tb_wvalid && tb_wready);
-                    @(posedge tb_clk);
+                    @(posedge tb_aclk);
                     tb_wvalid = 1'b0;
                 end
             join
