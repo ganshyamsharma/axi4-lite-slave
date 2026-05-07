@@ -69,6 +69,17 @@ module tb_axi4_lite_slave();
 
     end
 
+    // Continously checks if ARVALID is deasserted before ARREADY is asserted
+    always @(posedge tb_aclk) begin      
+        if(arvalid_prev == 1'b1 && tb_arvalid == 1'b0) begin
+            if(arready_prev == 1'b0) begin
+                $fatal(1, "PROTOCOL VIOLATION");
+            end
+        end
+        arvalid_prev <= tb_arvalid;
+        arready_prev <= tb_arready;
+    end
+
     // Data Write Task
     task axi_write;
         input [31:0] write_address;
@@ -100,6 +111,7 @@ module tb_axi4_lite_slave();
         end
     endtask
 
+    // Data 
     task axi_write_data_first;
         input [31:0] wr_addr;
         input [31:0] wr_data;
