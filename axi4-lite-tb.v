@@ -103,18 +103,33 @@ module tb_axi4_lite_slave();
         begin
             @(posedge tb_aclk);
             tb_wvalid = 1'b1;
+            tb_bready = 1'b1;
             tb_wdata  = wr_data;
+            tb_wstrb  = wr_strobe;
 
             repeat(3) @(posedge tb_aclk);
             tb_awvalid = 1'b1;
             tb_awaddr  = wr_addr;
 
-            wait(tb_awvalid && tb_awready);
-            @(posedge tb_aclk);
-            tb_awvalid = 1'b0;
+            fork
+                begin
+                    wait(tb_awvalid && tb_awready);
+                    @(posedge tb_aclk);
+                    tb_awvalid = 1'b0;
+                end
+                begin
+                    wait(tb_wvalid && tb_wready);
+                    @(posedge tb_clk);
+                    tb_wvalid = 1'b0;
+                end
+            join
 
-            wait(tb_wvalid && tb_wready)
-            @(posedge tb_clk)
+            wait(tb_bvalid && tb_bready);
+            @(posedge tb_aclk);
+            tb_bready = 1'b0;
+
+            $display("[%0t] | Addr: 0x%0h | Data: 0x%0h | Strb: %b | Resp: %b",
+                     $time, wr_addr, wr_data, wr_strobe, tb_rresp);
         end
     endtask
 
