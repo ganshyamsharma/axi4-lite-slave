@@ -66,6 +66,7 @@ module tb_axi4_lite_slave();
     end
 
     // Continously checks if ARVALID is deasserted before ARREADY is asserted i.e. without handshake
+    // This block shall be replicated if checks required for other valid and ready signals also
     reg r_arvalid_prev;
     reg r_arready_prev;
     always @(posedge tb_aclk) begin      
