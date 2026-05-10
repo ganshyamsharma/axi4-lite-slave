@@ -65,7 +65,7 @@ module tb_axi4_lite_slave();
         forever #5 tb_aclk = ~tb_aclk;
     end
 
-    // Continously checks if ARVALID is deasserted before ARREADY is asserted
+    // Continously checks if ARVALID is deasserted before ARREADY is asserted i.e. without handshake
     reg r_arvalid_prev;
     reg r_arready_prev;
     always @(posedge tb_aclk) begin      
